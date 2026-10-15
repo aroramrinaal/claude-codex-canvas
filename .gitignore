@@ -1,6 +1,7 @@
 # Private planning, transcripts, and local agent context
 /docs/*
 !/docs/HOW_IT_WORKS.md
+!/docs/installation.md
 /planning/
 /plans/
 /notes/
