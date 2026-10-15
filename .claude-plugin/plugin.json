@@ -1,0 +1,8 @@
+{
+  "name": "codex-canvas",
+  "version": "0.1.0",
+  "description": "Claude directs; your authenticated local Codex renders images, consistent asset sets, and sprite strips.",
+  "author": {"name": "Mrinaal Arora"},
+  "license": "Apache-2.0",
+  "skills": "./skills/"
+}

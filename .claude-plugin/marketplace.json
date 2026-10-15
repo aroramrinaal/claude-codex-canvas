@@ -1,0 +1,11 @@
+{
+  "name": "codex-canvas",
+  "description": "Claude-directed visual assets rendered by local Codex.",
+  "owner": {"name": "Mrinaal Arora"},
+  "plugins": [{
+    "name": "codex-canvas",
+    "source": "./",
+    "description": "Claude art direction with local Codex image generation.",
+    "version": "0.1.0"
+  }]
+}

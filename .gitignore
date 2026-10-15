@@ -1,0 +1,35 @@
+# Private planning, transcripts, and local agent context
+/docs/*
+!/docs/HOW_IT_WORKS.md
+/planning/
+/plans/
+/notes/
+/local/
+/transcripts/
+/*.md
+!/README.md
+/.claude/
+/.codex/
+/AGENTS.md
+/CLAUDE.md
+*.local.md
+*.plan.md
+/PLAN*.md
+/NOTES*.md
+/TODO*.md
+
+# Generated jobs and assets; do not publish private prompts or references
+/.canvas/
+/output/
+/tmp/
+/dist/
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.egg-info/
