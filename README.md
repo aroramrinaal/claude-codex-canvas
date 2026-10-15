@@ -6,6 +6,9 @@ A Claude Code skill for images, reference-guided edits, transparent assets,
 consistent sets, and 2D sprite strips. Claude writes prompts and reviews images;
 local scripts preserve originals and deliver exact dimensions.
 
+Includes focused recipes for photos, products, raster logos, edits and consistent sets,
+plus action-by-action sprite guidance, per-frame timing and transparent WebP/APNG exports.
+
 ## Get started
 
 From this repository, install the skill:

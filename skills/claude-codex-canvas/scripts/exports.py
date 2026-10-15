@@ -5,6 +5,7 @@ from pathlib import Path
 
 from PIL import Image, ImageOps
 
+from animation import frame_durations, save_animation
 from common import CanvasError, save_image, sha256
 from images import ANCHORS, LOSSLESS_WEBP, color_value, flatten, inspect_image, load_image, size_value
 
@@ -66,18 +67,21 @@ def animation_format(frames: list, suffix: str, background: str | None):
 
 
 def animate(args) -> dict:
-    if not 2 <= len(args.frames) <= 256 or not 20 <= args.duration <= 10000:
-        raise CanvasError("Animation needs 2–256 frames and a duration of 20–10,000ms per frame.")
+    if not 2 <= len(args.frames) <= 256:
+        raise CanvasError("Animation needs 2–256 frames.")
+    durations = frame_durations(args, len(args.frames))
     frames = [load_image(Path(p).expanduser()) for p in args.frames]
     if len({frame.size for frame in frames}) != 1:
         raise CanvasError("Normalize frames to the same dimensions before animation export.")
     if frames[0].width * frames[0].height * len(frames) > 40_000_000:
         raise CanvasError("Animation exceeds 40 million total frame pixels.")
     frames, kwargs = animation_format(frames, Path(args.output).suffix.lower(), args.background)
-    path = save_image(frames[0], Path(args.output), save_all=True, append_images=frames[1:],
-                      duration=args.duration, loop=0, **kwargs)
+    path, encoded = save_animation(frames, Path(args.output), durations, args.play_once, **kwargs)
     with Image.open(path) as saved:
         actual_count = getattr(saved, "n_frames", 1)
     return {"status": "exported", "path": str(path), "width": frames[0].width,
             "height": frames[0].height, "input_frames": len(frames), "saved_frames": actual_count,
-            "duration_ms": args.duration, "sha256": sha256(path)}
+            "duration_ms": durations[0] if len(set(durations)) == 1 else None,
+            "durations_ms": durations, "encoded_durations_ms": encoded,
+            "total_duration_ms": sum(encoded), "play_once": args.play_once,
+            "sha256": sha256(path)}

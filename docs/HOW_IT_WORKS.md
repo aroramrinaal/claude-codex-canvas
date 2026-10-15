@@ -8,12 +8,13 @@ Python and Pillow prepare exact final files from the generated originals.
 ## Package
 
 - `skills/claude-codex-canvas/SKILL.md` is the skill entrypoint.
-- `references/` holds prompting, sets, sprites and export recipes.
+- `references/` holds prompting, still/edit recipes, sets, motion, sprites, QA and exports.
 - `scripts/canvas` is the launcher; `canvas.py` is the command interface.
 - Codex side: `discovery.py` finds a compatible CLI, `handoff.py` builds its instruction
   and command, `runner.py` runs one job, and `collector.py` accepts its image.
 - Local side: `images.py` holds shared decoding and inspection, `exports.py` exact stills
-  and animations, `alpha.py` chroma keys, `review.py` contact sheets, `sprites.py` strips.
+  and animations, `animation.py` shared timing/palettes, `alpha.py` chroma keys,
+  `review.py` contact sheets, `sprites.py` strips.
 - `common.py` holds errors, hashing, collision-safe saves and git-ignored workspaces.
 - `assets/brief.json` is an optional reusable set brief.
 - `NOTICE`, `LICENSE` and `licenses/` accompany the standalone skill.
@@ -80,18 +81,19 @@ Render sequentially, review each result, then inspect a contact sheet of final e
 For sprites, generate an entire strip grounded in an accepted seed frame.
 Normalize all frames with one shared scale and explicit anchor.
 Bottom anchors stabilize walks; source anchors retain jump height and displacement.
+Locking the first frame anchors the sequence to its seed's scale and position, with clipping checks.
 Empty slots, edge-touching content and entirely identical frames are rejected.
 Outputs include frame PNGs, an atlas, a manifest, a contact sheet and a preview GIF.
 The GIF uses a checkerboard for review; frame PNGs and the atlas retain true alpha.
 `animate` exports accepted frames as transparent WebP/APNG, or GIF with an opaque background.
+Per-frame `--durations` and `--play-once` encode holds and reactions; GIF uses a shared palette.
 Claude must inspect identity, motion, framing and loop continuity before delivery.
 Geometry checks cannot identify every wrong character or incorrect pose.
 
 ## Scope and verification
 
 V1 targets Claude Code CLI and desktop local sessions on macOS/Linux.
-It has no API fallback, pet installer, video endpoint or remote execution bridge.
+It has no API fallback, video endpoint or remote execution bridge.
 The test suite uses a fake Codex executable and synthetic images without generation spend.
 It exercises process failures, artifact validation, exact exports and sprite geometry.
 The doctor command checks the real installation without rendering.
-Source recipes are adapted with attribution; no OpenAI or Anthropic artwork is shipped.

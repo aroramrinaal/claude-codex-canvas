@@ -55,12 +55,11 @@ events and metadata. `init` and `render` add a `.gitignore` there, so it stays o
 in any project. Outputs never overwrite existing files. `--debug` retains
 Codex session logs; the default is ephemeral. Private job data is gitignored here.
 Visual acceptance belongs to Claude; geometry checks alone cannot certify good art.
-Codex pets, API fallback and remote/cloud Claude sessions are outside v1.
+Canvas requires local execution and has no image API fallback.
 
 ## Credits and license
 
-Apache-2.0. Adapts OpenAI **imagegen** and **Hatch Pet** recipes (Apache-2.0), and
-**Game Studio** sprite workflow (MIT); see [NOTICE](../NOTICE) for sources and changes.
+Apache-2.0; see [NOTICE](../NOTICE) for source credits, adaptations and bundled licenses.
 Upstream license copies travel inside the skill. No upstream icons or logos are included.
 Built on the [Agent Skills format](https://agentskills.io/home),
 [Codex CLI](https://github.com/openai/codex), and

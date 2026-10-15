@@ -1,11 +1,16 @@
 {
   "purpose": "",
+  "operation": "generate",
+  "display_context": "",
   "style": "",
   "palette": [],
   "camera_and_lighting": "",
   "identity_invariants": [],
+  "references": [],
+  "text_verbatim": [],
   "avoid": [],
   "accepted_base": null,
+  "animation": null,
   "max_attempts_per_asset": 3,
   "assets": []
 }

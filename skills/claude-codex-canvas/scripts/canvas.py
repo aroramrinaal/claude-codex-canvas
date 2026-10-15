@@ -18,6 +18,7 @@ except ImportError:
     raise SystemExit("Pillow is required. Use `uv run --script canvas.py …` or install Pillow>=11.3,<13 in your Python environment.")
 
 from alpha import alpha_key
+from animation import timing_arguments
 from collector import collect
 from common import CanvasError, private_dir
 from discovery import DEFAULT_EFFORT, DEFAULT_MODEL, preflight
@@ -77,7 +78,7 @@ def parser() -> argparse.ArgumentParser:
     animation = commands.add_parser("animate", help="Export accepted frames as animated WebP, APNG, or flattened GIF")
     animation.add_argument("--frames", nargs="+", required=True, help="Frame paths in playback order")
     animation.add_argument("--output", required=True)
-    animation.add_argument("--duration", type=int, default=120, help="Milliseconds per frame")
+    timing_arguments(animation)
     animation.add_argument("--background", help="Opaque GIF background; WebP/APNG retain alpha")
     animation.set_defaults(run=animate)
     alpha = commands.add_parser("alpha", help="Explicit border-connected chroma-key cleanup")
@@ -90,6 +91,7 @@ def parser() -> argparse.ArgumentParser:
     guide.add_argument("--seed", required=True)
     guide.add_argument("--frames", type=int, required=True)
     guide.add_argument("--slot-size", type=int, default=256)
+    guide.add_argument("--show-guides", action="store_true", help="Draw layout-only slot and safe-area guides; never copy them into artwork")
     guide.add_argument("--output", required=True)
     guide.set_defaults(run=sprite_guide)
     sprite = commands.add_parser("sprites", help="Normalize a generated horizontal strip and make atlas/previews")
@@ -100,7 +102,7 @@ def parser() -> argparse.ArgumentParser:
     sprite.add_argument("--padding", type=int, default=2)
     sprite.add_argument("--anchor", choices=["bottom", "center", "source"], default="bottom")
     sprite.add_argument("--alpha-threshold", type=int, default=8)
-    sprite.add_argument("--duration", type=int, default=120, help="Milliseconds per frame")
+    timing_arguments(sprite)
     sprite.add_argument("--smooth", action="store_true", help="Use Lanczos for non-pixel artwork")
     sprite.add_argument("--lock-first", help="Replace first frame with approved seed at exact final cell size")
     sprite.set_defaults(run=sprites)

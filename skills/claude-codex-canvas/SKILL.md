@@ -1,10 +1,10 @@
 ---
 name: claude-codex-canvas
-description: Generate and edit images, transparent assets, consistent visual sets, and 2D sprite strips from Claude Code using the user's logged-in local Codex CLI. Claude writes the art direction and prompts, reviews every image, and exports exact sizes. Use for raster assets, illustrations, game sprites, reference-guided edits, and animated GIF previews; not vector-native edits, geographic data analysis, or Codex pet installation.
+description: Generate and edit images, raster logo concepts, transparent assets, consistent visual sets, and 2D sprite animations from Claude Code using the user's logged-in local Codex CLI. Claude directs prompts, references and visual review; local tools export exact sizes and timed WebP/APNG/GIF animations. Use for illustrations, product imagery, game sprites and reference-guided edits; use native tools for vector editing.
 license: Apache-2.0; bundled MIT adaptations are identified in NOTICE
 metadata:
   author: Mrinaal Arora
-  version: "0.1.0"
+  version: "0.2.0"
 allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/canvas *)
 ---
 
@@ -39,10 +39,18 @@ network access and Codex's data directory. Do not disable the sandbox globally.
 
 ## Direct the work
 
-Read [references/prompting.md](references/prompting.md) when composing the brief.
-For sets, read [references/sets.md](references/sets.md).
-For strips and GIFs, read [references/sprites.md](references/sprites.md).
-Use [references/exports.md](references/exports.md) for exact sizes and output formats.
+Read [prompting.md](references/prompting.md) for the shared brief and reference contract.
+Then load only the resources needed for this request:
+
+| Task | Reference |
+| --- | --- |
+| Photos, products, heroes, logos, icons, diagrams, textures | [recipes.md](references/recipes.md) |
+| Preserve an image while changing text, objects, background or style | [editing.md](references/editing.md) |
+| A matching family of assets or character scenes | [sets.md](references/sets.md) |
+| Sprite strips, guides, normalization and atlas export | [sprites.md](references/sprites.md) |
+| Action beats, timing, loops, reactions or directional variants | [motion.md](references/motion.md) |
+| Exact sizes, transparency and animation formats | [exports.md](references/exports.md) |
+| Acceptance checks and targeted repairs | [quality.md](references/quality.md) |
 
 Keep a brief in the task workspace with purpose, style, palette, camera, dimensions,
 transparency, constraints, and reference roles. For one simple image, prompt.txt is enough.
@@ -50,6 +58,8 @@ transparency, constraints, and reference roles. For one simple image, prompt.txt
 Inspect every supplied reference and distinguish edit target, identity, style, and layout.
 Preserve specific user requirements; don't invent slogans, subjects, or a new aesthetic.
 For an edit, name exactly what changes and what stays fixed.
+For animation, choose pose count, per-frame beats, timing and loop/one-shot playback.
+For logo concepts, distinguish a generated bitmap from editable vector artwork.
 Describe composition/aspect ratio in the prompt; exact final pixels are set locally.
 
 Use `.canvas/` (from `init`) for intermediate briefs, prompts, jobs, and review files.
@@ -102,6 +112,7 @@ Prompt fidelity is reported as unverified; asking for verbatim forwarding is not
 
 Read the JSON result and **open `original_path` with Claude's image-reading tool**.
 Check the actual subject, identity, requested text, style, crop safety, and transparency.
+Use the relevant criteria in quality.md, then inspect again after export.
 `status: generated` means an image exists; it does not mean visual review passed.
 For a mismatch, write one targeted correction and attach the original as edit-target.
 Repeat the unchanged requirements. Stay within the attempt budget.
@@ -125,7 +136,6 @@ Do not replace absent generated artwork with code-drawn stand-ins or pretend QA 
 
 V1 includes images, edits, sets, strips, atlas PNGs, and WebP/APNG/GIF animation exports.
 GIF motion comes from generated frames; this is not a video-generation endpoint.
-Codex-specific 8×9 pets and pet installation are outside v1.
 Use deterministic code for vector assets or measured geographic/data visualizations.
 Generated map illustrations must not be presented as accurate GIS data.
 No API-key fallback, credential copying, private endpoint calls, or branded icons.

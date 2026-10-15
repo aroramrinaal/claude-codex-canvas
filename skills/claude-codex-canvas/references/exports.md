@@ -31,3 +31,34 @@ ${CLAUDE_SKILL_DIR}/scripts/canvas alpha --input flat.png --output cutout.png --
 This removes matching color connected to the image boundary and preserves enclosed colors.
 It is not semantic background removal and does not repair soft color spill or internal holes.
 Choose the key from the actual image, inspect edges, and never erase a subject's own color.
+
+## Animation timing and playback
+
+`animate` accepts still frames in playback order with equal dimensions. Use `--duration`
+for uniform milliseconds or `--durations` for one comma-separated value per frame; values
+must be 20–10,000ms. These options are mutually exclusive. Use `--play-once` for a one-shot;
+otherwise animation loops indefinitely. The same options apply to `sprites` previews and
+manifests. Reuse the manifest's durations when exporting final frames with `animate`.
+
+```bash
+${CLAUDE_SKILL_DIR}/scripts/canvas animate --frames public/wave/frames/01.png public/wave/frames/02.png public/wave/frames/03.png public/wave/frames/04.png --durations 180,120,180,240 --play-once --output public/wave.webp
+```
+
+| Format | Alpha / palette | Use |
+| --- | --- | --- |
+| Animated WebP | Soft alpha, lossless encoding | Compact web animation when the consumer supports it. |
+| APNG (`.png`) | Soft alpha, full-color | Full-color transparent animation; verify consumer support. |
+| GIF | Canvas flattens to an explicit opaque background; 256-color palette | Compatibility deliverable on a known background. |
+| PNG frames + atlas | Full alpha, no baked-in timing | Game-engine input; timing and atlas rectangles are in manifest.json. |
+
+GIF exports share a sequence-wide palette to reduce color flicker. GIF stores timing
+in 10ms units, so Canvas rounds explicitly and returns `encoded_durations_ms`; choose
+multiples of 10 when exact timing matters. The encoder can merge identical neighboring
+frames while preserving their hold duration. `saved_frames` reports the encoded count;
+it need not equal the number of input files. Viewer behavior still needs inspection.
+One-shot encoding differs by format; `--play-once` handles that distinction.
+
+Inspect animation with a playback-capable viewer and review constituent PNGs separately.
+`inspect` is intentionally a still-image command; it rejects animated files.
+Do not flatten a soft-alpha asset just to make an intermediate GIF. Keep transparent
+PNG/WebP/APNG masters and use the checkerboard GIF only as a review derivative.

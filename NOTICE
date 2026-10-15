@@ -7,24 +7,41 @@ This distribution adapts procedural text and sprite normalization ideas from:
 
 1. OpenAI imagegen (Apache-2.0): prompting.md, sample-prompts.md, and SKILL.md.
    Source: https://github.com/openai/skills/tree/main/skills/.curated/imagegen
-   Reviewed against the locally installed Codex system skill on 2026-10-15.
+   Reviewed against the locally installed Codex system skill on 2026-10-16.
+   Local source: ~/.codex/skills/.system/imagegen/.
+   Adaptations: references/prompting.md, recipes.md, editing.md, sets.md, quality.md
+   and SKILL.md; includes photography, product, layout, logo, texture, diagram,
+   reference-role, invariant-preserving edit and review guidance.
    Changes: Claude owns the brief, prompts and visual review; removed API fallback,
    model-specific API knobs, Codex-only policy and branded assets.
    License: licenses/imagegen-Apache-2.0.txt (inside the skill).
 
-2. Hatch Pet (Apache-2.0): identity invariants, row-strip spacing/effects rules,
-   and visual acceptance criteria, from the user's installed hatch-pet skill.
+2. Hatch Pet (Apache-2.0): SKILL.md, references/animation-rows.md,
+   references/qa-rubric.md, and row prompt text in scripts/prepare_pet_run.py,
+   from the user's installed ~/.codex/skills/hatch-pet/ (reviewed 2026-10-16).
+   Adaptations: references/motion.md, sprites.md, sets.md and quality.md;
+   identity invariants, per-action poses/timing, layout guides, asymmetric-design
+   mirroring criteria, effects boundaries and targeted visual repairs.
    Changes: generalized to arbitrary game characters and cell sizes; omitted the
    fixed 8x9 Codex pet contract, pet installation and subagent orchestration.
    License: licenses/hatch-pet-Apache-2.0.txt (inside the skill).
 
 3. OpenAI Game Studio 0.1.2 (MIT): sprite-pipeline workflow and
    normalize_sprite_strip.py's shared-scale/bottom-center normalization approach.
-   Source: https://github.com/openai/plugins (plugins/game-studio).
+   Source: https://github.com/openai/plugins/tree/main/plugins/game-studio
+   Reviewed 2026-10-16 against the installed game-studio/0.1.2 plugin and the local
+   OpenAI plugins checkout at commit 11c74d6ba24d3a6d48f54a194cd00ef3beea18f9.
+   Files: skills/sprite-pipeline/SKILL.md, references/sprite-pipeline.md,
+   scripts/normalize_sprite_strip.py (plus build_sprite_edit_canvas.py workflow).
    License identified by the source plugin's .codex-plugin/plugin.json.
    Changes: Canvas adds alpha/clipping checks, source-position anchors, padding,
-   collision-safe outputs, manifests, per-frame durations and review previews.
+   collision-safe outputs, manifests, seed-relative scale and review previews.
    License: licenses/game-studio-MIT.txt (inside the skill).
+
+Canvas 0.2 adds original shared timing/playback and GIF palette utilities. Source
+recipes remain self-contained adaptations, not dependencies on the source plugins.
+Model/API fallback controls, game-engine implementation, pet packaging, and source
+plugin branding are not included. Local source locations are provenance, not runtime paths.
 
 The runner, discovery, process lifecycle, collection, export utilities, tests,
 and package integration were implemented for Canvas.
