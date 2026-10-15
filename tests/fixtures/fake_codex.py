@@ -31,6 +31,8 @@ else:
     thread = str(uuid.uuid4())
     print(json.dumps({"type": "thread.started", "thread_id": thread}), flush=True)
     if mode == "timeout":
+        Path(os.environ["CODEX_HOME"]).mkdir(parents=True, exist_ok=True)
+        (Path(os.environ["CODEX_HOME"]) / "fake.pid").write_text(str(os.getpid()))
         time.sleep(30)
     root = Path(os.environ["CODEX_HOME"]) / "generated_images" / thread
     if mode not in ("missing", "partial", "failure", "exit-failure"):

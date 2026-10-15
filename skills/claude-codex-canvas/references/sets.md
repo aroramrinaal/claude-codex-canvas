@@ -11,9 +11,7 @@
 9. Create and inspect a contact sheet of all exports:
 
 ```bash
-"${CLAUDE_SKILL_DIR}/scripts/canvas" contact-sheet \
-  --inputs public/images/asset-a.png public/images/asset-b.png \
-  --output .canvas/set-review.png --columns 4
+${CLAUDE_SKILL_DIR}/scripts/canvas contact-sheet --inputs public/images/asset-a.png public/images/asset-b.png --output .canvas/set-review.png --columns 4
 ```
 
 Review the set for consistent visual weight, identity, palette and crop.

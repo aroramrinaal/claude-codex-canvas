@@ -10,15 +10,20 @@ Python and Pillow prepare exact final files from the generated originals.
 - `skills/claude-codex-canvas/SKILL.md` is the skill entrypoint.
 - `references/` holds prompting, sets, sprites and export recipes.
 - `scripts/canvas` is the launcher; `canvas.py` is the command interface.
-- `runner.py` handles Codex discovery, rendering and artifact collection.
-- `imaging.py` handles export, alpha, contact sheets and sprite processing.
+- Codex side: `discovery.py` finds a compatible CLI, `handoff.py` builds its instruction
+  and command, `runner.py` runs one job, and `collector.py` accepts its image.
+- Local side: `images.py` holds shared decoding and inspection, `exports.py` exact stills
+  and animations, `alpha.py` chroma keys, `review.py` contact sheets, `sprites.py` strips.
+- `common.py` holds errors, hashing, collision-safe saves and git-ignored workspaces.
 - `assets/brief.json` is an optional reusable set brief.
 - `NOTICE`, `LICENSE` and `licenses/` accompany the standalone skill.
 
 ## Preflight
 
 Run `canvas doctor`; it generates no image and spends no generation quota.
-Discovery checks executable candidates on PATH and common app installation paths.
+Run `canvas init`; it creates `.canvas/` with a `.gitignore`, so private job data stays local.
+Discovery checks PATH, common app installation paths, and nvm/Volta/Bun installs,
+since apps launched from the Dock may not inherit a shell's PATH.
 It checks CLI flags, image_generation availability and ChatGPT login status.
 Old or incompatible candidates are skipped, with their reasons retained.
 An explicit `--codex` or `CANVAS_CODEX` is authoritative and does not silently fall back.
@@ -36,6 +41,8 @@ Codex is instructed to inspect references and forward the visual prompt unchange
 The default caller is gpt-6-luna at low effort; both settings are overridable.
 The caller model is separate from the GPT Image backend; Canvas does not pin the latter.
 The subprocess uses closed stdin, a read-only shell sandbox and a bounded timeout.
+SIGTERM or SIGHUP, as sent when Claude's Bash tool times out, stops Codex and fails the job.
+The skill tells Claude to give `render` a 5-minute Bash timeout, above the 180s render limit.
 Its working directory is isolated from the user's project instructions.
 By default, --ephemeral avoids Codex rollout persistence.
 Use --debug when a retained Codex session is needed for diagnosis.

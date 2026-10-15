@@ -11,8 +11,7 @@ Lock silhouette, face, markings, palette, outfit, prop side, outline weight and 
 Create a reference canvas from the approved seed:
 
 ```bash
-"${CLAUDE_SKILL_DIR}/scripts/canvas" sprite-guide \
-  --seed /absolute/path/seed.png --frames 6 --output .canvas/run-guide.png
+${CLAUDE_SKILL_DIR}/scripts/canvas sprite-guide --seed /absolute/path/seed.png --frames 6 --output .canvas/run-guide.png
 ```
 
 Generate a whole horizontal strip in one image call. Independent per-frame generations
@@ -38,10 +37,7 @@ not a silent replacement for genuine transparency. Never key out a color in the 
 ## Normalize and inspect
 
 ```bash
-"${CLAUDE_SKILL_DIR}/scripts/canvas" sprites \
-  --input /absolute/path/to/job/original.png --frames 6 \
-  --frame-size 64x64 --padding 2 --anchor bottom \
-  --duration 120 --output-dir public/sprites/walk
+${CLAUDE_SKILL_DIR}/scripts/canvas sprites --input /absolute/path/to/job/original.png --frames 6 --frame-size 64x64 --padding 2 --anchor bottom --duration 120 --output-dir public/sprites/walk
 ```
 
 - `bottom`: shared scale, bottom-center baseline for locomotion.
@@ -59,9 +55,7 @@ Verify identity, correct pose count, motion, readable detail, baseline, and loop
 Export accepted frames as a final animation in playback order:
 
 ```bash
-"${CLAUDE_SKILL_DIR}/scripts/canvas" animate \
-  --frames public/sprites/walk/frames/*.png \
-  --output public/sprites/walk.webp --duration 120
+${CLAUDE_SKILL_DIR}/scripts/canvas animate --frames public/sprites/walk/frames/*.png --output public/sprites/walk.webp --duration 120
 ```
 
 WebP and `.png` (APNG) retain alpha. GIF requires an explicit opaque `--background`

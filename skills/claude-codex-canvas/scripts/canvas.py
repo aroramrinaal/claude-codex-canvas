@@ -17,9 +17,20 @@ try:
 except ImportError:
     raise SystemExit("Pillow is required. Use `uv run --script canvas.py …` or install Pillow>=11.3,<13 in your Python environment.")
 
-from common import CanvasError
-from imaging import alpha_key, animate, contact_sheet, finish, inspect_image, sprite_guide, sprites
-from runner import DEFAULT_MODEL, collect, preflight, render
+from alpha import alpha_key
+from collector import collect
+from common import CanvasError, private_dir
+from discovery import DEFAULT_EFFORT, DEFAULT_MODEL, preflight
+from exports import animate, finish
+from images import inspect_image
+from review import contact_sheet
+from runner import render
+from sprites import sprite_guide, sprites
+
+
+def workspace(args) -> dict:
+    root = private_dir(Path(args.dir))
+    return {"status": "ready", "workspace": str(root), "jobs_dir": str(root / "jobs"), "git_ignored": True}
 
 
 def parser() -> argparse.ArgumentParser:
@@ -28,6 +39,9 @@ def parser() -> argparse.ArgumentParser:
     doctor = commands.add_parser("doctor", help="Check CLI capabilities and ChatGPT login; no generation")
     doctor.add_argument("--codex", help="Explicit Codex executable (or CANVAS_CODEX)")
     doctor.set_defaults(run=lambda a: preflight(a.codex))
+    init = commands.add_parser("init", help="Create a git-ignored workspace for briefs, prompts and jobs")
+    init.add_argument("--dir", default=".canvas")
+    init.set_defaults(run=workspace)
     draw = commands.add_parser("render", help="Generate one original through authenticated Codex")
     draw.add_argument("--prompt-file", required=True)
     draw.add_argument("--reference", action="append", default=[], metavar="ROLE=PATH")
@@ -35,8 +49,8 @@ def parser() -> argparse.ArgumentParser:
     draw.add_argument("--jobs-dir", default=".canvas/jobs")
     draw.add_argument("--codex")
     draw.add_argument("--model", default=os.environ.get("CANVAS_MODEL", DEFAULT_MODEL), help="Codex caller model, not image backend")
-    draw.add_argument("--effort", choices=["low", "medium", "high", "xhigh", "max"], default=os.environ.get("CANVAS_EFFORT", "low"))
-    draw.add_argument("--timeout", type=float, default=180)
+    draw.add_argument("--effort", choices=["low", "medium", "high", "xhigh", "max"], default=os.environ.get("CANVAS_EFFORT", DEFAULT_EFFORT))
+    draw.add_argument("--timeout", type=float, default=180, help="Seconds; keep the Bash tool timeout longer")
     draw.add_argument("--debug", action="store_true", help="Keep Codex session logs (omit --ephemeral)")
     draw.set_defaults(run=render)
     gather = commands.add_parser("collect", help="Re-check an existing completed job without generating")

@@ -18,8 +18,16 @@ with Pillow 11.3+ (or uv), and Codex with ChatGPT login and image_generation ena
 
 ## Start
 
-Run `${CLAUDE_SKILL_DIR}/scripts/canvas doctor` once per session.
-It checks every discovered Codex candidate until a compatible ChatGPT login is found.
+Run both once per session; neither spends generation quota:
+
+- `${CLAUDE_SKILL_DIR}/scripts/canvas doctor` checks Codex.
+- `${CLAUDE_SKILL_DIR}/scripts/canvas init` creates `.canvas/` with its own `.gitignore`,
+  so briefs, prompts, reference snapshots and jobs are never committed.
+
+Run every command as one line starting with the unquoted `${CLAUDE_SKILL_DIR}/scripts/canvas`.
+That prefix is pre-approved; quoting it, `cd`-ing first, or chaining with `&&` causes permission prompts.
+
+Doctor checks every discovered Codex candidate until a compatible ChatGPT login is found.
 An explicit `--codex /path/to/codex` or `CANVAS_CODEX` overrides discovery.
 If no executable qualifies, report the concrete diagnosis; don't switch to an API.
 The runner never reads auth.json. Codex handles its own authentication.
@@ -44,7 +52,7 @@ Preserve specific user requirements; don't invent slogans, subjects, or a new ae
 For an edit, name exactly what changes and what stays fixed.
 Describe composition/aspect ratio in the prompt; exact final pixels are set locally.
 
-Use `.canvas/` for intermediate briefs, prompts, jobs, and review files.
+Use `.canvas/` (from `init`) for intermediate briefs, prompts, jobs, and review files.
 Keep final assets in the user's requested project destination.
 Make clear that rendering uses the user's Codex usage allowance.
 For a multi-image task, state the expected base/variant/strip count before starting.
@@ -54,21 +62,23 @@ Use sequential renders in v1 so each result can guide the next.
 
 ## Render one image
 
-Write the final visual prompt to a UTF-8 file. Invoke the bundled launcher directly:
+Write the final visual prompt to a UTF-8 file, then render it.
+**A render can take up to 180s, longer than the Bash tool's 2-minute default:
+always give the Bash call `timeout: 300000`.**
 
 ```bash
-"${CLAUDE_SKILL_DIR}/scripts/canvas" render \
-  --prompt-file .canvas/hero-prompt.txt --jobs-dir .canvas/jobs
+${CLAUDE_SKILL_DIR}/scripts/canvas render --prompt-file .canvas/hero-prompt.txt
 ```
 
 For an edit or consistent variant:
 
 ```bash
-"${CLAUDE_SKILL_DIR}/scripts/canvas" render \
-  --prompt-file .canvas/variant-prompt.txt --transparent \
-  --reference "identity=/absolute/path/base.png" \
-  --reference "style=/absolute/path/style.png"
+${CLAUDE_SKILL_DIR}/scripts/canvas render --prompt-file .canvas/variant-prompt.txt --transparent --reference identity=/absolute/path/base.png --reference style=/absolute/path/style.png
 ```
+
+Quote a `--reference` value only when its path contains spaces.
+If the Bash call is interrupted anyway, Canvas stops Codex and marks the job failed.
+Read that job's `job.json`, tell the user, and do not re-render without asking.
 
 Use `edit-target=...` for the image being changed; label its invariants in the prompt.
 References are snapshotted, then passed through `referenced_image_paths`.
@@ -100,9 +110,7 @@ If quality still fails, show the best candidate and the remaining defect honestl
 Export only after selecting the image:
 
 ```bash
-"${CLAUDE_SKILL_DIR}/scripts/canvas" finish \
-  --input /absolute/path/to/job/original.png \
-  --output public/images/hero.png --size 1200x630 --fit crop
+${CLAUDE_SKILL_DIR}/scripts/canvas finish --input /absolute/path/to/job/original.png --output public/images/hero.png --size 1200x630 --fit crop
 ```
 
 Choose crop, pad, or explicit stretch to suit the brief. Never silently distort artwork.

@@ -17,7 +17,7 @@ Always keep the generated original. The tool creates versioned siblings instead 
 PNG/WebP retain alpha; WebP exports are lossless. JPEG needs an explicit opaque
 background when source alpha is present. ICO supports square sizes up to 256x256.
 
-Check an artifact with `canvas inspect /path/to/image.png`.
+Check an artifact with `${CLAUDE_SKILL_DIR}/scripts/canvas inspect /path/to/image.png`.
 It decodes pixels and reports dimensions, alpha fractions, and SHA-256.
 An alpha channel alone is not proof of transparency; fully transparent pixels must exist.
 Visual review still needs to catch painted checkerboards, unwanted halos or missing details.
@@ -25,8 +25,7 @@ Visual review still needs to catch painted checkerboards, unwanted halos or miss
 For intentional solid-background inputs only:
 
 ```bash
-"${CLAUDE_SKILL_DIR}/scripts/canvas" alpha --input flat.png \
-  --output cutout.png --chroma '#00ff00' --tolerance 24
+${CLAUDE_SKILL_DIR}/scripts/canvas alpha --input flat.png --output cutout.png --chroma '#00ff00' --tolerance 24
 ```
 
 This removes matching color connected to the image boundary and preserves enclosed colors.

@@ -27,6 +27,16 @@ def write_json(path: Path, data: dict) -> None:
     os.replace(temporary, path)
 
 
+def private_dir(path: Path) -> Path:
+    """Create a workspace folder that git ignores, so prompts and references stay local."""
+    path = path.expanduser().absolute()
+    path.mkdir(parents=True, exist_ok=True)
+    ignore = path / ".gitignore"
+    if not ignore.exists():
+        ignore.write_text("# Created by Claude Codex Canvas: private prompts, references and jobs.\n*\n")
+    return path
+
+
 def versioned(path: Path, index: int) -> Path:
     return path if index == 1 else path.with_name(f"{path.stem}-v{index}{path.suffix}")
 
